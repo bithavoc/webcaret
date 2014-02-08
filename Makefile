@@ -16,10 +16,15 @@ build: webcaret
 
 webcaret: lib/**/*.d deps/heaploop deps/webcaret-router
 	mkdir -p out
-	(cd lib; $(DC) -Hd../out/di/ -c -of../out/webcaret.o -op webcaret/*.d $(lib_build_params) $(DFLAGS))
+	(cd lib; $(DC) -Hd../out/di/ -c -of../out/webcaret.o -op webcaret/*.d webcaret/http/*.d $(lib_build_params) $(DFLAGS))
 	(mkdir -p out/heaploop ; cd out/heaploop/ ; ar -x ../heaploop.a)
 	(mkdir -p out/webcaret-router ; cd out/webcaret-router/ ; ar -x ../webcaret-router.a)
 	ar -r out/webcaret.a out/webcaret-router/*.o out/heaploop/*.o out/webcaret.o
+
+test: webcaret
+	(cd test; $(DC) -of../out/test_runner -unittest -main -op *.d -I../out/di ../out/webcaret.a $(DFLAGS))
+	chmod +x out/./test_runner
+	out/./test_runner
 
 cleandeps:
 	rm -rf deps/*

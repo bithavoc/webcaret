@@ -1,6 +1,7 @@
 module webcaret.application;
 
 import webcaret.router;
+import webcaret.http.forms;
 import heaploop.networking.http;
 import heaploop.networking.tcp : TcpStream;
 import std.string : format;
@@ -35,6 +36,29 @@ class ApplicationHttpRequest : HttpRequest, IRoutedRequest {
 
     private:
         string[string] _params;
+        string[string] _form;
+
+package:
+
+    void prepareRequest() {
+        switch(this.contentType) {
+            default:
+                return;
+            case "application/x-www-form-urlencoded": {
+                ubyte[] formData;
+                this.read ^ (chunk) {
+                    formData ~= chunk.buffer;
+                };
+                string formText = cast(string)formData;
+                this.form = parseURLEncodedForm(formText);
+                break;
+            }
+            case "multipart/form-data": {
+                assert(false, "multipart/form-data is not implemented yet, pull requests are welcome :)");
+            }
+        }
+    }
+
 
     public:
         @property {
@@ -43,6 +67,12 @@ class ApplicationHttpRequest : HttpRequest, IRoutedRequest {
             }
             void params(string[string] params) nothrow {
                 _params = params;
+            }
+            string[string] form() nothrow {
+                return _form;
+            }
+            void form(string[string] form) nothrow {
+                _form = form;
             }
         }
         this(HttpServerConnection connection) {
@@ -53,6 +83,7 @@ class ApplicationHttpRequest : HttpRequest, IRoutedRequest {
 class Application {
     private:
         Router!(ApplicationHttpRequest, HttpResponse) _router;
+
     public:
         this() {
             _router = new Router!(ApplicationHttpRequest, HttpResponse);
@@ -71,7 +102,9 @@ class Application {
             server.listen ^^ (connection) {
                 debug writeln("HTTP Agent just connected");
                 connection.process ^^ (request, response) {
-                    _router.execute(request.method, request.uri.path, cast(ApplicationHttpRequest)request, response);
+                    auto appRequest = cast(ApplicationHttpRequest)request;
+                    appRequest.prepareRequest();
+                    _router.execute(request.method, request.uri.path, appRequest, response);
                 };
             };
         }
