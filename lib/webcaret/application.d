@@ -1,7 +1,6 @@
 module webcaret.application;
 
 import webcaret.router;
-import webcaret.http.forms;
 import heaploop.networking.http;
 import heaploop.networking.tcp : TcpStream;
 import std.string : format;

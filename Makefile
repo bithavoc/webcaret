@@ -16,7 +16,7 @@ build: webcaret
 
 webcaret: lib/**/*.d deps/heaploop deps/webcaret-router
 	mkdir -p out
-	(cd lib; $(DC) -Hd../out/di/ -c -of../out/webcaret.o -op webcaret/*.d webcaret/http/*.d $(lib_build_params) $(DFLAGS))
+	(cd lib; $(DC) -Hd../out/di/ -c -of../out/webcaret.o -op webcaret/*.d $(lib_build_params) $(DFLAGS))
 	(mkdir -p out/heaploop ; cd out/heaploop/ ; ar -x ../heaploop.a)
 	(mkdir -p out/webcaret-router ; cd out/webcaret-router/ ; ar -x ../webcaret-router.a)
 	ar -r out/webcaret.a out/webcaret-router/*.o out/heaploop/*.o out/webcaret.o
@@ -34,10 +34,8 @@ cleandeps:
 deps/heaploop:
 	@echo "Compiling deps/heaploop"
 	git submodule update --init --remote deps/heaploop
-	rm -rf deps/heaploop/deps/duv
-	rm -rf deps/heaploop/deps/events.d
-	rm -rf deps/heaploop/deps/http-parser.d
 	mkdir -p out
+	DEBUG=${DEBUG} $(MAKE) -C deps/heaploop clean
 	DEBUG=${DEBUG} $(MAKE) -C deps/heaploop
 	cp deps/heaploop/out/heaploop.a out/
 	cp -r deps/heaploop/out/di/ out/di
@@ -47,6 +45,7 @@ deps/webcaret-router:
 	git submodule update --init --remote deps/webcaret-router
 	rm -rf deps/webcaret-router/deps/events.d
 	mkdir -p out
+	(cd deps/webcaret-router ; DEBUG=${DEBUG} $(MAKE) clean )
 	(cd deps/webcaret-router ; DEBUG=${DEBUG} $(MAKE) )
 	cp deps/webcaret-router/out/webcaret-router.a out/
 	cp -r deps/webcaret-router/out/di/ out/di
