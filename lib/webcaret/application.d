@@ -45,7 +45,7 @@ package:
                 return;
             case "application/x-www-form-urlencoded": {
                 ubyte[] formData;
-                this.read ^ (chunk) {
+                this.read ^= (chunk) {
                     formData ~= chunk.buffer;
                 };
                 string formText = cast(string)formData;
@@ -97,10 +97,10 @@ class Application {
         void serve(string address, int port) {
             auto server = new AppHttpListener;
             server.bind4(address, port);
-            "listening http://%s:%d".format(address, port).writeln;
-            server.listen ^^ (connection) {
+            "Web^ Application serving http://%s:%d".format(address, port).writeln;
+            server.listen ^^= (connection) {
                 debug writeln("HTTP Agent just connected");
-                connection.process ^^ (request, response) {
+                connection.process ^^= (request, response) {
                     auto appRequest = cast(ApplicationHttpRequest)request;
                     appRequest.prepareRequest();
                     _router.execute(request.method, request.uri.path, appRequest, response);
