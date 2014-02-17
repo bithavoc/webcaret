@@ -52,7 +52,7 @@ deps/webcaret-router:
 	(cd deps/webcaret-router ; DEBUG=${DEBUG} $(MAKE) clean )
 	(cd deps/webcaret-router ; DEBUG=${DEBUG} $(MAKE) )
 	cp deps/webcaret-router/out/webcaret-router.a out/
-	cp -r deps/webcaret-router/out/di/ out/di
+	cp -R deps/webcaret-router/out/di/* out/di
 
 clean:
 	rm -rf out/*
