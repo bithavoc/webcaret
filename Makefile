@@ -34,6 +34,8 @@ cleandeps:
 deps/heaploop:
 	@echo "Compiling deps/heaploop"
 	git submodule update --init deps/heaploop
+	(cd deps/heaploop; git checkout master)
+	(cd deps/heaploop; git pull origin master)
 	mkdir -p out
 	DEBUG=${DEBUG} $(MAKE) -C deps/heaploop clean
 	DEBUG=${DEBUG} $(MAKE) -C deps/heaploop
@@ -43,6 +45,8 @@ deps/heaploop:
 deps/webcaret-router:
 	@echo "Compiling deps/webcaret-router"
 	git submodule update --init deps/webcaret-router
+	(cd deps/webcaret-router; git checkout master)
+	(cd deps/webcaret-router; git pull origin master)
 	rm -rf deps/webcaret-router/deps/events.d
 	mkdir -p out
 	(cd deps/webcaret-router ; DEBUG=${DEBUG} $(MAKE) clean )
