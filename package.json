@@ -1,6 +1,7 @@
 {
     "name": "webcaret",
     "description": "Experimental Web Framework on top of Heaploop.io",
+    "license": "MIT",
     "importPaths": ["dub/di"],
     "lflags-osx": ["-framework", "CoreServices"],
     "sourceFiles-osx-x86_64": ["dub/bin/webcaret-osx-x86_64.a"],
