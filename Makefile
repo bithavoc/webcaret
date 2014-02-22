@@ -2,6 +2,8 @@ DC=dmd
 OS_NAME=$(shell uname -s)
 MH_NAME=$(shell uname -m)
 DFLAGS=
+ARCH=`uname -m`
+OS_TYPE=linux
 ifeq (${DEBUG}, 1)
 	DFLAGS=-debug -gc -gs -g
 else
@@ -9,10 +11,17 @@ else
 endif
 ifeq (${OS_NAME},Darwin)
 	DFLAGS+=-L-framework -LCoreServices 
+	OS_TYPE=osx
 endif
 lib_build_params= -I../out/di ../out/heaploop.a ../out/webcaret-router.a
 
 build: webcaret
+
+dub: webcaret
+	mkdir -p dub/bin
+	mkdir -p dub/di
+	cp -r out/di/ dub/di/
+	cp out/webcaret.a dub/bin/webcaret-$(OS_TYPE)-$(ARCH).a
 
 webcaret: lib/**/*.d deps/heaploop deps/webcaret-router
 	mkdir -p out
@@ -29,7 +38,7 @@ test: webcaret
 cleandeps:
 	rm -rf deps/*
 
-.PHONY: clean cleandeps
+.PHONY: clean cleandeps webcaret
 
 deps/heaploop:
 	@echo "Compiling deps/heaploop"
