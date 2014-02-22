@@ -3,6 +3,7 @@
     "description": "Experimental Web Framework on top of Heaploop.io",
     "importPaths": ["dub/di"],
     "lflags-osx": ["-framework", "CoreServices"],
-    "sourceFiles-osx-x86_64": ["dub/bin/webcaret-osx-x86_64.a"]
+    "sourceFiles-osx-x86_64": ["dub/bin/webcaret-osx-x86_64.a"],
+    "sourceFiles-linux-x86_64": ["dub/bin/webcaret-linux-x86_64.a"]
 }
     
