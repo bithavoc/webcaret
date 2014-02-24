@@ -17,12 +17,6 @@ lib_build_params= -I../out/di ../out/heaploop.a ../out/webcaret-router.a
 
 build: webcaret
 
-dub: webcaret
-	mkdir -p dub/bin
-	mkdir -p dub/di
-	cp -r out/di/ dub/di/
-	cp out/webcaret.a dub/bin/webcaret-$(OS_TYPE)-$(ARCH).a
-
 webcaret: lib/**/*.d deps/heaploop deps/webcaret-router
 	mkdir -p out
 	(cd lib; $(DC) -Hd../out/di/ -c -of../out/webcaret.o -op webcaret/*.d $(lib_build_params) $(DFLAGS))
